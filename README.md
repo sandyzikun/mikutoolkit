@@ -2,6 +2,8 @@
 
 A Simple Toolkit.
 
+![](https://github.com/sandyzikun/mikutoolkit/raw/init/fufu.gif)
+
 > あなたもミクと創ろう、世界を繋ごう。 \
 > Create your own Miku, which connects the World! \
 > 創造屬於你的初音未來吧，連接起整個世界。 \
