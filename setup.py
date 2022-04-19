@@ -3,7 +3,7 @@
 import setuptools
 setuptools.setup(
     name = "mikutoolkit",
-    version = "0.0.5",
+    version = "0.0.6",
     description = "A Simple Toolkit",
     long_description = open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type = "text/markdown",
@@ -13,5 +13,5 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         ],
     packages = setuptools.find_packages(),
-    install_requires = [],
+    install_requires = ["numpy>=1.14.3", "matplotlib>=2.2.2"],
     )
