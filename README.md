@@ -46,6 +46,6 @@ To access `mikutoolkit` and its functions import it in your Python code like thi
 
 ## Extra
 
-![](mikuv2.jpeg)
+![](https://github.com/sandyzikun/mikutoolkit/raw/init/mikuv2.jpeg)
 
 Hatsune Miku SAIKOU !!
