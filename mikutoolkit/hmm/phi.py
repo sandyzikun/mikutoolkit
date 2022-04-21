@@ -14,7 +14,7 @@ def viterbi_shortest_trans(A, num_states) -> list[tuple]:
                 res.append((l, k))
     return res
 """
-class HMM_Traid(object):
+class Hidden_Markov_Model(object):
     """
     Traid of HMM (Hidden Markov Model), l = (A, B, pi)
     """
@@ -37,7 +37,7 @@ Emission Mat B:
 %s
 Initial Prob π:
 %s
-@ %s>""" % (type(self), self.__transmat, self.__emission, self.__initprob, hex(id(self)))
+@ %s>""" % (type(self).__name__, self.__transmat, self.__emission, self.__initprob, hex(id(self)))
     @property
     def transition(self):   return self.__transmat.copy()
     @property
@@ -155,9 +155,10 @@ Initial Prob π:
             self.__initprob[ k , 0 ] = prob_spec_times[k][0]
         return self
 def new_hmm(shape, name_states=None, name_observations=None):
-    return HMM_Traid(
+    return Hidden_Markov_Model(
         A = np.identity(shape[0]),
         B = np.ones((shape[1] , shape[0])) / shape[1],
         pi = np.ones((shape[0] , 1)) / shape[0],
         Q = name_states, U = name_observations
         )
+HMModel = HMM_Traid = HMM = Hidden_Markov_Model
