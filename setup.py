@@ -3,7 +3,7 @@
 import setuptools
 setuptools.setup(
     name = "mikutoolkit",
-    version = "0.0.6",
+    version = "0.0.7",
     description = "A Simple Toolkit",
     long_description = open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type = "text/markdown",
