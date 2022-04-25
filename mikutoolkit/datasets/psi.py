@@ -9,11 +9,13 @@ class Linsep_Binary_Normal_Dataset(object):
         ミク.__deviation = np.array(deviation)
         ミク.__stddev = stddev
         rs = np.random.RandomState(random_state)
-        ミク.__X = np.concatenate([
-            rs.randn( ミク.__numhalf , ミク.__numdim ) * ミク.__stddev + (ミク.__center + ミク.__deviation).reshape( 1 , ミク.__numdim ),
-            rs.randn( ミク.__numhalf , ミク.__numdim ) * ミク.__stddev + (ミク.__center - ミク.__deviation).reshape( 1 , ミク.__numdim ),
-            ], axis=0)
-        ミク.__y = np.array([+1] * ミク.__numhalf + [-1] * ミク.__numhalf).reshape( ミク.__numhalf * 2 , 1 )
+        x0 = rs.randn( ミク.__numhalf * 2 * ミク.__numdim ) * ミク.__stddev
+        ミク.__X = np.zeros(( ミク.__numhalf * 2 , ミク.__numdim ))
+        for k in range(ミク.__numhalf):
+            ミク.__X[ k , : ] += x0[ (k * ミク.__numdim) : ((k+1) * ミク.__numdim) ] + (ミク.__center + ミク.__deviation)
+        for k in range(ミク.__numhalf, ミク.__numhalf * 2):
+            ミク.__X[ k , : ] += x0[ (k * ミク.__numdim) : ((k+1) * ミク.__numdim) ] + (ミク.__center - ミク.__deviation)
+        ミク.__y = np.repeat([ +1 , -1 ], ミク.__numhalf).reshape( ミク.__numhalf * 2 , 1 )
         del rs
     @property
     def center(ミク):       return ミク.__center.copy()
