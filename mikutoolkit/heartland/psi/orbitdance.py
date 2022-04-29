@@ -88,7 +88,7 @@ class 長い夜はふたりきりで(object):
                         (1 - piecerate0) * piecewidth * (piecerate0 ** 2) * ミク.__arr[ (k + 1) , 2 ],
                         ])
             else:
-                raise Exception # TODO: Complete Exception Message
+                raise Exception("The Input x is out of range.")
         else:
             polybases = ミク.__polybases(x)
             return np.sum([
@@ -108,8 +108,8 @@ def solve_spline(deltas, avgdev):
         _coef_mat[ k , (k - 1) ] += deltas[ k - 1 ]
         _coef_mat[ k , k ] += 2 * (deltas[ k - 1 ] + deltas[k]) - 1
         _coef_mat[ k , (k + 1) ] += deltas[k]
-        _bias_vec[k] += 3 * (avgdev[k] - avgdev[ k - 1 ])
-    return np.linalg.solve(_coef_mat, _bias_vec)
+        _bias_vec[ k , 0 ] += 3 * (avgdev[k] - avgdev[ k - 1 ])
+    return np.linalg.inv(_coef_mat) @ _bias_vec
 class 心音の上昇と空間を伝う問い(object):
     def __init__(ミク, arr: np.ndarray):
         ミク.__arr = arr
@@ -135,7 +135,7 @@ class 心音の上昇と空間を伝う問い(object):
                     res += ミク.__params[ k , each ]
                 return res
         else:
-            raise Exception # TODO: Complete Exception Message
+            raise Exception("The Input x is out of range.")
     def __len__(ミク):
         return ミク.__length
     def plot(ミク, arr, *args, **kwargs):
