@@ -17,7 +17,7 @@ def solve_polyls(arr, order):
         _xsum = np.sum(_xarr)
         for l in range(order - k):
             _coef_mat[ (-l - 1) , (k + l + 1) ] += _xsum
-    return  _bias_vec @ np.linalg.inv(_coef_mat)
+    return _bias_vec @ np.linalg.inv(_coef_mat)
 class 積層都市の底で_本当の愛を知らないの(object):
     # 軌道都市の底で_本当の空を知らないの
     def __init__(ミク, arr: np.ndarray, order: int):
