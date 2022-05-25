@@ -40,6 +40,10 @@ To access `mikutoolkit` and its functions import it in your Python code like thi
 
 ## Changelog
 
+### Version 0.0.8
+
+* Completed Implementation of Crypto Functions (`crypto`);
+
 ### Version 0.0.6
 
 * Added HMM (Hidden Markov Model) (`HMM_Traid`) and Fourier Series (`fourier.Series`), Dataset Class (`Linsep_Binary_Normal_Dataset`);

@@ -1,3 +1,4 @@
+./pyclean.sh
 python3 -m build
 echo ""
 echo "Now, use"

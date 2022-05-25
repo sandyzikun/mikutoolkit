@@ -1,15 +1,31 @@
+# (A Simple Function to encode Words to meaningless String)
+# GNU General Public License v3.0,
+#             Copyright (C) 2022 凪坤 (GitHub ID: sandyzikun)
+# -*-
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# -*-
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+# -*-
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+# -*-
 import numpy as np
-class Constants(object): # All Keys Here
+class __Constants(object): # All Keys Here
     KEY_MAT_3 = np.array([ 1,  2,   8, 0,  3,   9, 0, 0, 1 ]).reshape( 3 , 3 ).astype(int)
     KEY_INV_3 = np.array([ 1, 42, 126, 0, 43, 125, 0, 0, 1 ]).reshape( 3 , 3 ).astype(int)
     KEY_MAT_2 = np.array([  7, 0,  1, 1 ]).reshape( 2 , 2 ).astype(int)
     KEY_INV_2 = np.array([ 55, 0, 73, 1 ]).reshape( 2 , 2 ).astype(int)
     RANDOM_STATE = 39
-    BIAS_CHAR = 39
-    BIAS_LIST = 39
+    BIASES = [ 39 , 39 , 39 ]
 class __Cryptostr(object):
-    def __init__(self, x):
-        self.__list_all = [ "".join([
+    def __init__(ミク, x):
+        ミク.__list_all = [ "".join([
                 x[_] for _ in eachlist
                 ]) for eachlist in [ # All Permutations
             [ 0, 1, 2, 3 ], [ 0, 1, 3, 2 ], [ 0, 2, 1, 3 ],
@@ -21,15 +37,15 @@ class __Cryptostr(object):
             [ 3, 0, 1, 2 ], [ 3, 0, 2, 1 ], [ 3, 1, 0, 2 ],
             [ 3, 1, 2, 0 ], [ 3, 2, 0, 1 ], [ 3, 2, 1, 0 ],
             ]]
-        self.__mapping_cry_num = dict(map(
+        ミク.__mapping_cry_num = dict(map(
             lambda x: x[ :: (-1) ],
-            enumerate(self.__list_all)
+            enumerate(ミク.__list_all)
             ))
-    def __getitem__(self, k):
-        return self.__list_all[k]
-    def mapping_cry_num(self, x):
-        return self.__mapping_cry_num[x]
-__rs = np.random.RandomState(Constants.RANDOM_STATE)
+    def __getitem__(ミク, k):
+        return ミク.__list_all[k]
+    def mapping_cry_num(ミク, x):
+        return ミク.__mapping_cry_num[x]
+__rs = np.random.RandomState(__Constants.RANDOM_STATE)
 __cry = __Cryptostr("icsk")
 def __num2bin(x, flag=True):
     assert 0 <= x < 256 and isinstance(flag, bool)
@@ -71,12 +87,12 @@ def __en2code(x: tuple):
     fres[2] += __cry[u % 24]
     v //= 24
     u //= 24
-    fres[1] += __cry[ (3 * (v % 3) + (u % 3) + Constants.BIAS_LIST) % 24 ]
+    fres[1] += __cry[ (3 * (v % 3) + (u % 3) + __Constants.BIASES[2]) % 24 ]
     v //= 3
     u //= 3
     return fres[0] + fres[1][ : 2 ] + "39"[u] + fres[1][ 2 : ] + fres[2] + "39"[v]
 def __de2code(x):
-    t = (__cry.mapping_cry_num(x[ 4 : 6 ] + x[ 7 : 9 ]) - Constants.BIAS_LIST) % 24
+    t = (__cry.mapping_cry_num(x[ 4 : 6 ] + x[ 7 : 9 ]) - __Constants.BIASES[2]) % 24
     v, u = t // 3, t % 3
     v += { "3": 0, "9": 3 }[x[-1]]
     u += { "3": 0, "9": 3 }[x[ 6]]
@@ -90,26 +106,30 @@ def __numenco(x):
     num_remain_3 = res.shape[0] % 3
     if num_remain_3:
         res = np.concatenate([ res , __rs.randint(128, size=( 3 - num_remain_3 , 1 )) ], axis=0)
-    res += Constants.BIAS_CHAR
+    res += __Constants.BIASES[0]
     res %= 128
     for k in range(0, res.shape[0], 3):
-        res[ k : (k + 3) , : ] = Constants.KEY_MAT_3 @ res[ k : (k + 3) , : ] % 128
+        res[ k : (k + 3) , : ] = __Constants.KEY_MAT_3 @ res[ k : (k + 3) , : ] % 128
     num_remain_2 = res.shape[0] % 2
     if num_remain_2:
         res = np.concatenate([ res , __rs.randint(128, size=( 1 , 1 )) ], axis=0)
+    res += __Constants.BIASES[1]
+    res %= 128
     for k in range(0, res.shape[0], 2):
-        res[ k : (k + 2) , : ] = Constants.KEY_MAT_2 @ res[ k : (k + 2) , : ] % 128
+        res[ k : (k + 2) , : ] = __Constants.KEY_MAT_2 @ res[ k : (k + 2) , : ] % 128
     return res, num_remain_3
 def __numdeco(x):
     assert len(x.shape) == 2 and x.shape[0] % 2 != 1 and x.shape[1] == 1
     res = x.copy()
     for k in range(0, res.shape[0], 2):
-        res[ k : (k + 2) , : ] = Constants.KEY_INV_2 @ res[ k : (k + 2) , : ] % 128
+        res[ k : (k + 2) , : ] = __Constants.KEY_INV_2 @ res[ k : (k + 2) , : ] % 128
+    res -= __Constants.BIASES[1]
+    res %= 128
     if res.shape[0] % 3 != 0:
         res = res[ : (-1) , : ]
     for k in range(0, res.shape[0], 3):
-        res[ k : (k + 3) , : ] = Constants.KEY_INV_3 @ res[ k : (k + 3) , : ] % 128
-    res -= Constants.BIAS_CHAR
+        res[ k : (k + 3) , : ] = __Constants.KEY_INV_3 @ res[ k : (k + 3) , : ] % 128
+    res -= __Constants.BIASES[0]
     res %= 128
     return res
 def __num2cry(x):
@@ -122,6 +142,13 @@ def __cry2num(x):
         res.append(cur_nums[1])
     return np.array(res).reshape( len(res) , 1 )
 def encode(content: str) -> str:
+    """
+    UTF-8 Text
+    -> Bytes to 7-bit Binaries
+    -> Caesar Shift -> Hill(3) Transform
+    -> Caesar Shift -> Hill(2) Transform
+    -> Encoded
+    """
     res    = __str2num(content)
     res, r = __numenco(res)
     res    = __num2cry(res)
@@ -129,7 +156,7 @@ def encode(content: str) -> str:
 def decode(cipher: str) -> str:
     res, r = __cry2num(cipher[ 2 : (-2) ]), { "++": 0 , "!=": 1 , "->": 2 }[cipher[ (-2) : ]]
     res    = __numdeco(res)
-    res    = __num2str(res[ : len(res) + ((r - 3) if r else 0) , : ])
+    res    = __num2str(res[ : res.shape[0] + ((r - 3) if r else 0) , : ])
     return res
 def enfile(filepath: str, outpath:str=None, forcemode:bool=True):
     """
